@@ -25,6 +25,15 @@
   letter-spacing: -3.5%;
 }
 
+.drag-drop-txt {
+  color: #bdbdbd;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: -3.5%;
+}
+
 .content-box {
   background-color: white;
   height: 469px;
@@ -37,7 +46,39 @@
   width: 350px;
   height: 220px;
   background-color: #f6f8fb;
-  border: 1px dashed #97bef4;
+  border: 2px dashed #97bef4;
   box-sizing: border-box;
   border-radius: 12px;
+}
+
+#uploaded-img {
+  border-radius: 12px;
+  border: 2px solid #97bef4;
+  box-sizing: border-box;
+  border-radius: 12px;
+  margin-bottom: 0;
+}
+
+.btn {
+  font-family: "Poppins", "Segoe UI", "Roboto";
+  font-weight: 300;
+  cursor: pointer;
+  width: 100px;
+  height: 30px;
+  background-color: #2f80ed;
+  border: none;
+  border-radius: 8px;
+  color: white;
+}
+
+.btn:hover {
+  background-color: #2a76da;
+}
+
+.dashed-box:hover {
+  background-color: #e9e9e9;
+}
+
+.dashed-box:-moz-drag-over {
+  background-color: #e9e9e9;
 }
