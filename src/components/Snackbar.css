@@ -1,0 +1,37 @@
+.snackbar {
+  position: fixed;
+  left: 50%;
+  bottom: 5%;
+  transform: translate(-50%, -50%);
+  width: 130px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.snackbar .symbol {
+  flex: 20%;
+  margin-left: 5px;
+  margin-top: 5px;
+}
+
+.snackbar .message {
+  flex: 80%;
+  text-align: center;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+#show {
+  opacity: 1;
+  transition: opacity 0.75s linear;
+}
+#hide {
+  opacity: 0;
+  transition: opacity 0.75s linear;
+}

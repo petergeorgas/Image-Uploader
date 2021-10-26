@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./Success.css";
 import cloud_done from "../cloud_done.svg";
 import CopyToClipboard from "react-copy-to-clipboard";
+import Snackbar from "./Snackbar";
+
+const SnackbarType = {
+  success: "success",
+  fail: "fail",
+};
 
 function Success(props) {
+  const snackbarRef = useRef(null);
   const { imgUrl } = props;
 
-  const copyLink = () => {};
+  const copyLink = () => {
+    snackbarRef.current.show();
+  };
 
   return (
     <div className="flex-container">
@@ -26,6 +35,11 @@ function Success(props) {
                 Copy
               </button>
             </CopyToClipboard>
+            <Snackbar
+              ref={snackbarRef}
+              message="Link copied."
+              type={SnackbarType.success}
+            />
           </div>
         </div>
       </div>
