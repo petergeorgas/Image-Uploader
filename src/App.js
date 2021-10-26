@@ -38,8 +38,11 @@ function App() {
   const [file, setFile] = useState(null); // Initialize a new state variable to null.
   const [fileObj, setFileObj] = useState(null);
   const [uploadHeader, setUploadHeader] = useState("Uploading ...");
+  const [downloadURL, setDownloadURL] = useState(null); // Store the URL for our uploaded file...
 
   const [pct, setPct] = useState(0);
+
+  const [success, setSuccess] = useState(false);
 
   const [inProg, setInProg] = useState(false);
 
@@ -87,6 +90,7 @@ function App() {
 
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log("URL: " + downloadURL);
+          setDownloadURL(downloadURL);
         });
         setUploadHeader("Done.");
 
@@ -94,15 +98,16 @@ function App() {
           setFile(null);
           setFileObj(null);
           setInProg(false);
+          setSuccess(true);
         }, 1500);
       }
     );
   };
 
-  return <Success imgUrl="http://localhost:1414" />;
-  /*
   if (inProg) {
     return <Loading percentage={pct} header={uploadHeader} />;
+  } else if (success) {
+    return <Success imgUrl={downloadURL} />;
   } else {
     return (
       <div className="flex-container">
@@ -163,8 +168,8 @@ function App() {
           </div>
         </div>
       </div>
-    ); 
-  }*/
+    );
+  }
 }
 
 export default App;
