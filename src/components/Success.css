@@ -1,0 +1,35 @@
+.success-icon {
+  width: 48px;
+  height: 48px;
+  color: #219653;
+}
+
+.link {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.link-holder {
+  width: 255px;
+  padding-left: 10px;
+}
+
+.link-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 13px;
+  line-height: 16px;
+  border: 1px solid #e0e0e0;
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 355px;
+  height: 34px;
+  background-color: #f6f8fb;
+}
+
+.copy-btn {
+  margin-top: 0;
+  margin-left: auto;
+}
