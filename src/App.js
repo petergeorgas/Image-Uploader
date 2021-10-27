@@ -1,5 +1,3 @@
-import logo from "./logo.svg";
-import axios from "axios";
 import "./App.css";
 import image from "./image.svg";
 import { useRef, useState, useCallback } from "react";
@@ -12,7 +10,7 @@ import {
 } from "firebase/storage";
 import Loading from "./components/Loading";
 import Success from "./components/Success";
-import Dropzone, { useDropzone } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import sha256 from "sha256";
 
 import Snackbar from "./components/Snackbar";
@@ -152,13 +150,25 @@ function App() {
               <div {...getRootProps()}>
                 <div className="dashed-box flex-container-inner">
                   <input {...getInputProps()} />
-                  <img id="filler-img" src={image} width={150} height={100} />
+                  <img
+                    id="filler-img"
+                    src={image}
+                    width={150}
+                    height={100}
+                    alt="Filler Image"
+                  />
                   <p className="drag-drop-txt">Drag & drop your image here</p>
                 </div>
               </div>
             ) : (
               <div>
-                <img id="uploaded-img" src={file} width={350} height={220} />
+                <img
+                  id="uploaded-img"
+                  src={file}
+                  width={350}
+                  height={220}
+                  alt="Uploaded image"
+                />
               </div>
             )}
 

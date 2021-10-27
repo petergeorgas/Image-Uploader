@@ -21,10 +21,16 @@ function Success(props) {
     <div className="flex-container">
       <div className="content-box">
         <div className="flex-container-inner">
-          <img src={cloud_done} className="success-icon" />
+          <img src={cloud_done} className="success-icon" alt="success icon" />
           <h2 className="box-header">Upload successful.</h2>
           <div>
-            <img id="uploaded-img" src={imgUrl} width={350} height={220} />
+            <img
+              id="uploaded-img"
+              src={imgUrl}
+              width={350}
+              height={220}
+              alt="uploaded image from cloud"
+            />
           </div>
           <div className="link-box">
             <div className="link-holder">
