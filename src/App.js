@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import axios from "axios";
 import "./App.css";
 import image from "./image.svg";
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getStorage,
@@ -12,6 +12,10 @@ import {
 } from "firebase/storage";
 import Loading from "./components/Loading";
 import Success from "./components/Success";
+import Dropzone, { useDropzone } from "react-dropzone";
+import sha256 from "sha256";
+
+import Snackbar from "./components/Snackbar";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -29,6 +33,11 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
+const SnackbarType = {
+  success: "success",
+  fail: "fail",
+};
+
 const app = initializeApp(firebaseConfig);
 const storage = getStorage();
 
@@ -39,6 +48,7 @@ function App() {
   const [fileObj, setFileObj] = useState(null);
   const [uploadHeader, setUploadHeader] = useState("Uploading ...");
   const [downloadURL, setDownloadURL] = useState(null); // Store the URL for our uploaded file...
+  const snackbarRef = useRef(null);
 
   const [pct, setPct] = useState(0);
 
@@ -50,6 +60,20 @@ function App() {
     inputFile.current.click();
     console.log(inputFile);
   };
+
+  const onDrop = useCallback((dropFile) => {
+    console.log("magma");
+    const singleFile = dropFile[0]; // Grab the first file (if multiple)
+    console.log(singleFile);
+
+    if (!isDragReject) {
+      setFile(URL.createObjectURL(singleFile));
+      setFileObj(singleFile);
+    } else {
+      // Show toast!
+      snackbarRef.current.show();
+    }
+  });
 
   const handleFileChange = (event) => {
     console.log("File change!!");
@@ -64,7 +88,12 @@ function App() {
 
     // Create a ref to this new file in storage...
 
-    const storageRef = ref(storage, fileObj.name);
+    const split_file_name = fileObj.name.split(".");
+    const file_ext = split_file_name[split_file_name.length - 1];
+
+    const hashFileName = sha256(fileObj.name) + "." + file_ext;
+
+    const storageRef = ref(storage, hashFileName);
 
     setInProg(true);
     const uploadTask = uploadBytesResumable(storageRef, fileObj); // Retrieve the promsise for upload
@@ -104,6 +133,11 @@ function App() {
     );
   };
 
+  const { getRootProps, getInputProps, isDragReject } = useDropzone({
+    onDrop,
+    accept: "image/jpeg, image/png",
+  });
+
   if (inProg) {
     return <Loading percentage={pct} header={uploadHeader} />;
   } else if (success) {
@@ -115,9 +149,12 @@ function App() {
           <div className="flex-container-inner">
             <h2 className="box-header">Upload your image</h2>
             {!file ? (
-              <div className="dashed-box flex-container-inner">
-                <img id="filler-img" src={image} width={150} height={100} />
-                <p className="drag-drop-txt">Drag & drop your image here</p>
+              <div {...getRootProps()}>
+                <div className="dashed-box flex-container-inner">
+                  <input {...getInputProps()} />
+                  <img id="filler-img" src={image} width={150} height={100} />
+                  <p className="drag-drop-txt">Drag & drop your image here</p>
+                </div>
               </div>
             ) : (
               <div>
@@ -135,7 +172,7 @@ function App() {
                   ref={inputFile}
                   style={{ display: "none" }}
                   onChange={handleFileChange}
-                  accept="image/*"
+                  accept="image/jpeg, image/png"
                 />
                 <button className="btn" onClick={onChooseButtonClick}>
                   Pick a file
@@ -165,6 +202,11 @@ function App() {
                 </button>
               </div>
             )}
+            <Snackbar
+              ref={snackbarRef}
+              message="Invalid file."
+              type={SnackbarType.fail}
+            />
           </div>
         </div>
       </div>

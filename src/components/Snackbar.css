@@ -23,7 +23,6 @@
 .snackbar .message {
   flex: 80%;
   text-align: center;
-  font-weight: bold;
   margin-right: 5px;
 }
 
