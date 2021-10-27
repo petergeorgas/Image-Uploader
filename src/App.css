@@ -14,6 +14,7 @@
   justify-content: center;
   margin: 0;
   padding: 0;
+  cursor: pointer;
   flex-direction: column;
 }
 
@@ -57,6 +58,11 @@
   box-sizing: border-box;
   border-radius: 12px;
   margin-bottom: 0;
+  cursor: pointer;
+}
+
+#uploaded-img:hover {
+  filter: opacity(85%);
 }
 
 .btn {
