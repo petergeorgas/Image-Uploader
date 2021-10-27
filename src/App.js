@@ -162,13 +162,16 @@ function App() {
               </div>
             ) : (
               <div>
-                <img
-                  id="uploaded-img"
-                  src={file}
-                  width={350}
-                  height={220}
-                  alt="Uploaded image"
-                />
+                <div {...getRootProps()}>
+                  <input {...getInputProps()} />
+                  <img
+                    id="uploaded-img"
+                    src={file}
+                    width={350}
+                    height={220}
+                    alt="Uploaded image"
+                  />
+                </div>
               </div>
             )}
 
