@@ -15,6 +15,8 @@ import Success from "./components/Success";
 import Dropzone, { useDropzone } from "react-dropzone";
 import sha256 from "sha256";
 
+import Snackbar from "./components/Snackbar";
+
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
 
@@ -31,6 +33,11 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
+const SnackbarType = {
+  success: "success",
+  fail: "fail",
+};
+
 const app = initializeApp(firebaseConfig);
 const storage = getStorage();
 
@@ -41,6 +48,7 @@ function App() {
   const [fileObj, setFileObj] = useState(null);
   const [uploadHeader, setUploadHeader] = useState("Uploading ...");
   const [downloadURL, setDownloadURL] = useState(null); // Store the URL for our uploaded file...
+  const snackbarRef = useRef(null);
 
   const [pct, setPct] = useState(0);
 
@@ -61,6 +69,9 @@ function App() {
     if (!isDragReject) {
       setFile(URL.createObjectURL(singleFile));
       setFileObj(singleFile);
+    } else {
+      // Show toast!
+      snackbarRef.current.show();
     }
   });
 
@@ -191,6 +202,11 @@ function App() {
                 </button>
               </div>
             )}
+            <Snackbar
+              ref={snackbarRef}
+              message="Invalid file."
+              type={SnackbarType.fail}
+            />
           </div>
         </div>
       </div>

@@ -20,7 +20,7 @@ const Snackbar = forwardRef((props, ref) => {
       className="snackbar"
       id={showSnackbar ? "show" : "hide"}
       style={{
-        backgroundColor: props.type === "success" ? "#00F593" : "#FF0033",
+        backgroundColor: props.type === "success" ? "#00F593" : "#FF4949",
         color: props.type === "success" ? "black" : "black",
       }}
     >
