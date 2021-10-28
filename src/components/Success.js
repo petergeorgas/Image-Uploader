@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import "./Success.css";
-import cloud_done from "../cloud_done.svg";
+import cloud_done from "../assets/cloud_done.svg";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Snackbar from "./Snackbar";
 

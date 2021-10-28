@@ -1,7 +1,7 @@
 import React, { useState, forwardRef, useImperativeHandle } from "react";
 import "./Snackbar.css";
-import content_copy from "../content_copy.svg";
-import error from "../error.svg";
+import content_copy from "../assets/content_copy.svg";
+import error from "../assets/error.svg";
 
 const Snackbar = forwardRef((props, ref) => {
   const [showSnackbar, setShowSnackbar] = useState(false);
