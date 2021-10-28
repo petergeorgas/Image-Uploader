@@ -1,5 +1,5 @@
 import "./App.css";
-import image from "./image.svg";
+import image from "./assets/image.svg";
 import { useRef, useState, useCallback } from "react";
 import { initializeApp } from "firebase/app";
 import {
