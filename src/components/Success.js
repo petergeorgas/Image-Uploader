@@ -11,7 +11,7 @@ const SnackbarType = {
 
 function Success(props) {
   const snackbarRef = useRef(null);
-  const { imgUrl } = props;
+  const { imgUrl, redirect } = props;
 
   const copyLink = () => {
     snackbarRef.current.show();
@@ -45,6 +45,11 @@ function Success(props) {
               message="Link copied."
               type={SnackbarType.success}
             />
+          </div>
+          <div className="new-upload-box">
+            <button className="btn" id="newUpldBtn" onClick={redirect}>
+              New Upload
+            </button>
           </div>
         </div>
       </div>

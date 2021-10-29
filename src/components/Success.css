@@ -16,6 +16,18 @@
   padding-left: 10px;
 }
 
+.new-upload-box {
+  margin-top: 12px;
+  line-height: 16px;
+  width: 355px;
+  height: 34px;
+  border-radius: 8px;
+}
+
+#newUpldBtn {
+  width: 100%;
+}
+
 .link-box {
   display: flex;
   flex-direction: row;
