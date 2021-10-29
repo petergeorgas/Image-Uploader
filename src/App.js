@@ -161,16 +161,10 @@ function App() {
                 </div>
               </div>
             ) : (
-              <div>
+              <div className="image-div">
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <img
-                    id="uploaded-img"
-                    src={file}
-                    width={350}
-                    height={220}
-                    alt="Uploaded image"
-                  />
+                  <img id="uploaded-img" src={file} alt="Uploaded image" />
                 </div>
               </div>
             )}
