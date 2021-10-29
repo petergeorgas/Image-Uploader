@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import "./Success.css";
-import cloud_done from "../cloud_done.svg";
+import cloud_done from "../assets/cloud_done.svg";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Snackbar from "./Snackbar";
 
@@ -23,13 +23,12 @@ function Success(props) {
         <div className="flex-container-inner">
           <img src={cloud_done} className="success-icon" alt="success icon" />
           <h2 className="box-header">Upload successful.</h2>
-          <div>
+          <div className="image-div ">
             <img
               id="uploaded-img"
               src={imgUrl}
-              width={350}
-              height={220}
               alt="uploaded image from cloud"
+              style={{ marginBottom: "20px" }}
             />
           </div>
           <div className="link-box">
