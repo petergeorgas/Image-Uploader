@@ -51,11 +51,21 @@
   border-radius: 12px;
 }
 
+.image-div {
+  display: flex;
+  width: 350px;
+  height: 220px;
+  justify-content: center;
+  align-items: center;
+}
+
 #uploaded-img {
+  max-width: 350px;
+  max-height: 220px;
+  border-radius: 12px;
   border-radius: 12px;
   border: 2px solid #97bef4;
   box-sizing: border-box;
-  border-radius: 12px;
   margin-bottom: 0;
 }
 
