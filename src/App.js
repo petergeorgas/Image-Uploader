@@ -73,6 +73,10 @@ function App() {
     }
   });
 
+  const newUpload = () => {
+    setSuccess(false); // Reset success state to false, which will cause a redirect to the home page
+  };
+
   const handleFileChange = (event) => {
     console.log("File change!!");
     let target = event.target;
@@ -139,7 +143,7 @@ function App() {
   if (inProg) {
     return <Loading percentage={pct} header={uploadHeader} />;
   } else if (success) {
-    return <Success imgUrl={downloadURL} />;
+    return <Success imgUrl={downloadURL} redirect={newUpload} />;
   } else {
     return (
       <div className="flex-container">
