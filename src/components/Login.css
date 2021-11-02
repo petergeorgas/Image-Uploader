@@ -56,3 +56,10 @@ button:hover {
 .form-container {
   width: 100%;
 }
+
+.skip-box {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}

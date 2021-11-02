@@ -3,13 +3,19 @@ import FormInput from "./FormInput";
 import "./Login.css";
 
 function Login() {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    console.log(data);
+  };
+
   return (
     <div className="flex-container">
       <div className="content-box">
         <div className="flex-container-inner">
           <div className="form-container">
             <h2 className="page-header">Log In</h2>
-            <form>
+            <form onSubmit={handleSubmit}>
               <FormInput
                 name="Email"
                 type="email"
@@ -20,7 +26,7 @@ function Login() {
               <FormInput
                 name="Password"
                 type="password"
-                errorMsg="Email address must be valid."
+                errorMsg="Password is required."
                 label="Password"
                 required={true}
               />
@@ -30,6 +36,9 @@ function Login() {
               </div>
               <div>
                 <button>Log In</button>
+              </div>
+              <div className="skip-box">
+                <button id="sign-up-btn">Skip</button>
               </div>
             </form>
           </div>
