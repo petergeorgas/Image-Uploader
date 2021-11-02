@@ -21,22 +21,12 @@
   width: fit-content;
   height: fit-content;
   font-size: 14px;
-  margin-left: 10px;
+  margin-left: 5px;
   margin-bottom: 0;
 }
 
 #sign-up-btn:hover {
-  background: none !important;
-  padding: 0 !important;
   color: #2a76da;
-  text-decoration: underline;
-  font-weight: 500;
-  cursor: pointer;
-  width: fit-content;
-  height: fit-content;
-  font-size: 14px;
-  margin-left: 10px;
-  margin-bottom: 0;
 }
 
 form {
