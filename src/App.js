@@ -14,6 +14,7 @@ import { useDropzone } from "react-dropzone";
 import sha256 from "sha256";
 
 import Snackbar from "./components/Snackbar";
+import Login from "./components/Login";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -140,6 +141,8 @@ function App() {
     accept: "image/jpeg, image/png",
   });
 
+  return <Login />;
+  /*
   if (inProg) {
     return <Loading percentage={pct} header={uploadHeader} />;
   } else if (success) {
@@ -222,7 +225,7 @@ function App() {
         </div>
       </div>
     );
-  }
+  }*/
 }
 
 export default App;
