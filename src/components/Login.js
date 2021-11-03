@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import FormInput from "./FormInput";
 import "./Login.css";
 
 function Login() {
+  const [values, setValues] = useState({
+    email: "",
+    pass: "",
+  });
+
+  const handleChange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
@@ -21,13 +30,15 @@ function Login() {
                 type="email"
                 errorMsg="Email address must be valid."
                 label="Email"
+                onChange={handleChange}
                 required={true}
               />
               <FormInput
-                name="Password"
+                name="pass"
                 type="password"
                 errorMsg="Password is required."
                 label="Password"
+                onChange={handleChange}
                 required={true}
               />
               <div className="sign-up-box">
@@ -37,10 +48,10 @@ function Login() {
               <div>
                 <button>Log In</button>
               </div>
-              <div className="skip-box">
-                <button id="sign-up-btn">Skip</button>
-              </div>
             </form>
+            <div className="skip-box">
+              <button id="sign-up-btn">Skip</button>
+            </div>
           </div>
         </div>
       </div>
