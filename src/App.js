@@ -42,8 +42,8 @@ const storage = getStorage();
 function App() {
   const inputFile = useRef(null);
 
-  const [file, setFile] = useState(null); // Initialize a new state variable to null.
   const [fileObj, setFileObj] = useState(null);
+  const [files, setFiles] = useState(null);
   const [uploadHeader, setUploadHeader] = useState("Uploading ...");
   const [downloadURL, setDownloadURL] = useState(null); // Store the URL for our uploaded file...
   const snackbarRef = useRef(null);
@@ -56,7 +56,7 @@ function App() {
 
   const onChooseButtonClick = () => {
     inputFile.current.click();
-    console.log(inputFile);
+    console.log(inputFile + "beans!");
   };
 
   const onDrop = useCallback((dropFile) => {
@@ -65,7 +65,6 @@ function App() {
     console.log(singleFile);
 
     if (!isDragReject) {
-      setFile(URL.createObjectURL(singleFile));
       setFileObj(singleFile);
     } else {
       // Show toast!
@@ -78,16 +77,25 @@ function App() {
   };
 
   const handleFileChange = (event) => {
-    console.log("File change!!");
     let target = event.target;
-    console.log(target.files[0]);
-    setFile(URL.createObjectURL(target.files[0]));
-    setFileObj(target.files[0]);
+    let files_list = target.files;
+
+    // The behavior here should be the same, we just need to determine how the UI should display multiple files vs 1...
+    // I'm thinking a grid view of 4. We will only accept 4.
+
+    if (files_list.length > 4) {
+      setFiles(files_list.slice(0, 5));
+    } else {
+      setFiles(files_list);
+    }
+
+    if (files_list.length == 1) {
+      console.log(target.files[0]);
+      setFileObj(target.files[0]);
+    } 
   };
 
   const uploadFile = () => {
-    console.log(file);
-
     // Create a ref to this new file in storage...
 
     const split_file_name = fileObj.name.split(".");
@@ -126,7 +134,6 @@ function App() {
         setUploadHeader("Done.");
 
         setTimeout(() => {
-          setFile(null);
           setFileObj(null);
           setInProg(false);
           setSuccess(true);
@@ -150,7 +157,7 @@ function App() {
         <div className="content-box">
           <div className="flex-container-inner">
             <h2 className="box-header">Upload your image</h2>
-            {!file ? (
+            {!fileObj ? (
               <div {...getRootProps()}>
                 <div className="dashed-box flex-container-inner">
                   <input {...getInputProps()} />
@@ -168,12 +175,16 @@ function App() {
               <div className="image-div">
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <img id="uploaded-img" src={file} alt="Uploaded image" />
+                  <img
+                    id="uploaded-img"
+                    src={URL.createObjectURL(fileObj)}
+                    alt="Uploaded image"
+                  />
                 </div>
               </div>
             )}
 
-            {!file ? (
+            {!fileObj ? (
               <div style={{ textAlign: "center" }}>
                 <p className="drag-drop-txt">Or</p>
                 <input
@@ -184,6 +195,7 @@ function App() {
                   style={{ display: "none" }}
                   onChange={handleFileChange}
                   accept="image/jpeg, image/png"
+                  multiple={true}
                 />
                 <button className="btn" onClick={onChooseButtonClick}>
                   Pick a file
@@ -207,6 +219,7 @@ function App() {
                   style={{ display: "none" }}
                   onChange={handleFileChange}
                   accept="image/*"
+                  multiple
                 />
                 <button className="btn" onClick={onChooseButtonClick}>
                   Pick another
