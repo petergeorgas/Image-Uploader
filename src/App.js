@@ -80,6 +80,7 @@ function App() {
       files_list = Object.entries(files_list);
       setFiles(files_list);
     } else {
+      files_list = Object.entries(files_list);
       setFiles(files_list);
     }
   };

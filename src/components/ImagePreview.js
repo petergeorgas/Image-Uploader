@@ -11,7 +11,7 @@ function ImagePreview(props) {
     return (
       <img
         id="uploaded-img"
-        src={URL.createObjectURL(images[0])}
+        src={URL.createObjectURL(images[0][1])}
         alt="Uploaded image"
       />
     );
