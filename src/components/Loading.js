@@ -3,23 +3,26 @@ import "./Loading.css";
 import "../App.css";
 
 function Loading(props) {
-  const { percentage, header } = props; // Get percentage
+  const { map, percentage, header } = props; // Get percentage
 
-  const widthStyle = {
-    borderRadius: "8px",
-    height: "100%",
-    backgroundColor: "#2F80ED",
-    width: `${percentage}%`,
-  };
+  console.log("FARTS:" + JSON.stringify(Object.entries(map.files)));
 
   return (
     <div className="flex-container">
       <div className="small-content-box">
         <div className="flex-container-inner-upload">
           <h2 className="box-header">{header}</h2>
-          <div className="load-bar">
-            <div style={widthStyle} className="prog-bar"></div>
-          </div>
+          {Object.entries(map.files).map((file, idx) => {
+            return (
+              <div className="load-bar">
+                <div
+                  key={idx}
+                  style={{ width: `${file[1].pct}%` }}
+                  className="prog-bar sizing"
+                ></div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

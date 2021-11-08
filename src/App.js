@@ -1,6 +1,6 @@
 import "./App.css";
 import image from "./assets/image.svg";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useReducer } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getStorage,
@@ -48,6 +48,8 @@ function App() {
   const [uploadHeader, setUploadHeader] = useState("Uploading ...");
   const [downloadURL, setDownloadURL] = useState(null); // Store the URL for our uploaded file...
   const snackbarRef = useRef(null);
+
+  const [fileMap, setFileMap] = useState({ files: {} });
 
   const [pct, setPct] = useState(0);
 
@@ -104,50 +106,83 @@ function App() {
 
   const uploadFile = () => {
     // Create a ref to this new file in storage...
-
-    const split_file_name = fileObj.name.split(".");
-    const file_ext = split_file_name[split_file_name.length - 1];
-
-    const hashFileName = sha256(fileObj.name) + "." + file_ext;
-
-    const storageRef = ref(storage, hashFileName);
-
     setInProg(true);
-    const uploadTask = uploadBytesResumable(storageRef, fileObj); // Retrieve the promsise for upload
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // On state change
-        var percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(`${percent}%`);
-        setPct(percent);
-      },
-      (error) => {
-        // On error
-        console.log(
-          "There was an error uploading the image. Please try again..."
-        );
-        // Maybe we can create our own snackbar here.
-      },
-      () => {
-        // On Complete
-        console.log("Image upload complete.");
+    files.forEach((fileObj) => {
+      const name = fileObj[1].name;
+      const split_file_name = name.split(".");
+      const file_ext = split_file_name[split_file_name.length - 1];
 
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("URL: " + downloadURL);
-          setDownloadURL(downloadURL);
-        });
-        setUploadHeader("Done.");
+      const hashFileName = sha256(name) + "." + file_ext;
 
-        setTimeout(() => {
-          setFileObj(null);
-          setInProg(false);
-          setSuccess(true);
-          setFiles([]);
-        }, 1500);
-      }
-    );
+      const storageRef = ref(storage, hashFileName);
+
+      const s = {
+        ...fileMap,
+      };
+
+      fileMap.files[name] = {
+        pct: 0,
+        downloadURL: "",
+      };
+
+      setFileMap(s);
+
+      ///setFileMap({ ...fileMap, [name]: { pct: 0, downloadURL: null } }); // Add this file to file map.
+
+      const uploadTask = uploadBytesResumable(storageRef, fileObj[1]); // Retrieve the promsise for upload
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // On state change
+          var percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`${fileObj[1].name}: ${percent}%`);
+
+          const s = { ...fileMap };
+
+          s.files[name].pct = percent;
+
+          setFileMap(s);
+          setPct(percent);
+        },
+        (error) => {
+          // On error
+          console.log(
+            "There was an error uploading the image. Please try again..."
+          );
+          // Maybe we can create our own snackbar here.
+        },
+        () => {
+          // On Complete
+          console.log("Image upload complete.");
+
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("URL: " + downloadURL);
+
+            const s = {
+              ...fileMap,
+            };
+
+            s.files[name].downloadURL = downloadURL;
+            setFileMap(s);
+
+            setDownloadURL(downloadURL);
+          });
+
+          // Once the last file completes its upload.
+          if (fileObj === files[files.length - 1]) {
+            setUploadHeader("Done.");
+            setTimeout(() => {
+              setFileObj(null);
+              setInProg(false);
+              setSuccess(true);
+              setFiles([]);
+            }, 1500);
+          }
+        }
+      );
+    });
   };
 
   const { getRootProps, getInputProps, isDragReject } = useDropzone({
@@ -156,7 +191,7 @@ function App() {
   });
 
   if (inProg) {
-    return <Loading percentage={pct} header={uploadHeader} />;
+    return <Loading map={fileMap} percentage={pct} header={uploadHeader} />;
   } else if (success) {
     return <Success imgUrl={downloadURL} redirect={newUpload} />;
   } else {
