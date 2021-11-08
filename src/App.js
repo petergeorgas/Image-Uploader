@@ -14,6 +14,7 @@ import { useDropzone } from "react-dropzone";
 import sha256 from "sha256";
 
 import Snackbar from "./components/Snackbar";
+import ImagePreview from "./components/ImagePreview";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -43,7 +44,7 @@ function App() {
   const inputFile = useRef(null);
 
   const [fileObj, setFileObj] = useState(null);
-  const [files, setFiles] = useState(null);
+  const [files, setFiles] = useState([]);
   const [uploadHeader, setUploadHeader] = useState("Uploading ...");
   const [downloadURL, setDownloadURL] = useState(null); // Store the URL for our uploaded file...
   const snackbarRef = useRef(null);
@@ -56,21 +57,32 @@ function App() {
 
   const onChooseButtonClick = () => {
     inputFile.current.click();
-    console.log(inputFile + "beans!");
   };
 
-  const onDrop = useCallback((dropFile) => {
-    console.log("magma");
-    const singleFile = dropFile[0]; // Grab the first file (if multiple)
-    console.log(singleFile);
+  const onDrop = useCallback((files_list) => {
+    const singleFile = files_list[0]; // Grab the first file (if multiple)
 
     if (!isDragReject) {
+      updateFiles(files_list);
       setFileObj(singleFile);
     } else {
       // Show toast!
       snackbarRef.current.show();
     }
   });
+
+  // Updates the list of files -- useful because the behavior of pressing a button & drag and drop is the exact same :)
+  const updateFiles = (files_list) => {
+    if (files_list.length > 1) {
+      files_list = Object.entries(files_list).slice(0, 4);
+      setFiles(files_list);
+    } else if (files_list.length < 4 && files_list.length > 1) {
+      files_list = Object.entries(files_list);
+      setFiles(files_list);
+    } else {
+      setFiles(files_list);
+    }
+  };
 
   const newUpload = () => {
     setSuccess(false); // Reset success state to false, which will cause a redirect to the home page
@@ -83,16 +95,11 @@ function App() {
     // The behavior here should be the same, we just need to determine how the UI should display multiple files vs 1...
     // I'm thinking a grid view of 4. We will only accept 4.
 
-    if (files_list.length > 4) {
-      setFiles(files_list.slice(0, 5));
-    } else {
-      setFiles(files_list);
-    }
+    updateFiles(files_list);
 
     if (files_list.length == 1) {
-      console.log(target.files[0]);
       setFileObj(target.files[0]);
-    } 
+    }
   };
 
   const uploadFile = () => {
@@ -137,6 +144,7 @@ function App() {
           setFileObj(null);
           setInProg(false);
           setSuccess(true);
+          setFiles([]);
         }, 1500);
       }
     );
@@ -157,7 +165,7 @@ function App() {
         <div className="content-box">
           <div className="flex-container-inner">
             <h2 className="box-header">Upload your image</h2>
-            {!fileObj ? (
+            {!files.length > 0 ? (
               <div {...getRootProps()}>
                 <div className="dashed-box flex-container-inner">
                   <input {...getInputProps()} />
@@ -175,16 +183,12 @@ function App() {
               <div className="image-div">
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <img
-                    id="uploaded-img"
-                    src={URL.createObjectURL(fileObj)}
-                    alt="Uploaded image"
-                  />
+                  <ImagePreview images={files} />
                 </div>
               </div>
             )}
 
-            {!fileObj ? (
+            {!files.length > 0 ? (
               <div style={{ textAlign: "center" }}>
                 <p className="drag-drop-txt">Or</p>
                 <input
