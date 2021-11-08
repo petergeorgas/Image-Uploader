@@ -43,7 +43,6 @@ const storage = getStorage();
 function App() {
   const inputFile = useRef(null);
 
-  const [fileObj, setFileObj] = useState(null);
   const [files, setFiles] = useState([]);
   const [uploadHeader, setUploadHeader] = useState("Uploading ...");
   const [downloadURL, setDownloadURL] = useState(null); // Store the URL for our uploaded file...
@@ -66,7 +65,6 @@ function App() {
 
     if (!isDragReject) {
       updateFiles(files_list);
-      setFileObj(singleFile);
     } else {
       // Show toast!
       snackbarRef.current.show();
@@ -88,6 +86,7 @@ function App() {
 
   const newUpload = () => {
     setSuccess(false); // Reset success state to false, which will cause a redirect to the home page
+    setFileMap({ files: {} });
   };
 
   const handleFileChange = (event) => {
@@ -98,10 +97,6 @@ function App() {
     // I'm thinking a grid view of 4. We will only accept 4.
 
     updateFiles(files_list);
-
-    if (files_list.length == 1) {
-      setFileObj(target.files[0]);
-    }
   };
 
   const uploadFile = () => {
@@ -120,8 +115,9 @@ function App() {
       const s = {
         ...fileMap,
       };
-
+      console.log(fileObj[1]);
       fileMap.files[name] = {
+        obj: fileObj[1],
         pct: 0,
         downloadURL: "",
       };
@@ -174,7 +170,6 @@ function App() {
           if (fileObj === files[files.length - 1]) {
             setUploadHeader("Done.");
             setTimeout(() => {
-              setFileObj(null);
               setInProg(false);
               setSuccess(true);
               setFiles([]);

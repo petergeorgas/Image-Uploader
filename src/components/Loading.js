@@ -7,6 +7,7 @@ function Loading(props) {
 
   console.log("FARTS:" + JSON.stringify(Object.entries(map.files)));
 
+  console.log("0" + Object.entries(map.files)[0][0]);
   return (
     <div className="flex-container">
       <div className="small-content-box">
@@ -14,12 +15,17 @@ function Loading(props) {
           <h2 className="box-header">{header}</h2>
           {Object.entries(map.files).map((file, idx) => {
             return (
-              <div className="load-bar">
-                <div
-                  key={idx}
-                  style={{ width: `${file[1].pct}%` }}
-                  className="prog-bar sizing"
-                ></div>
+              <div key={idx} className="entry">
+                <img
+                  className="thumbnail"
+                  src={URL.createObjectURL(file[1].obj)}
+                />
+                <div className="load-bar">
+                  <div
+                    style={{ width: `${file[1].pct}%` }}
+                    className="prog-bar sizing"
+                  ></div>
+                </div>
               </div>
             );
           })}
