@@ -73,16 +73,13 @@ function App() {
 
   // Updates the list of files -- useful because the behavior of pressing a button & drag and drop is the exact same :)
   const updateFiles = (files_list) => {
-    if (files_list.length > 1) {
+    if (files_list.length > 4) {
       files_list = Object.entries(files_list).slice(0, 4);
-      setFiles(files_list);
-    } else if (files_list.length < 4 && files_list.length > 1) {
-      files_list = Object.entries(files_list);
-      setFiles(files_list);
     } else {
       files_list = Object.entries(files_list);
-      setFiles(files_list);
     }
+
+    setFiles(files_list);
   };
 
   const newUpload = () => {
