@@ -11,8 +11,8 @@ const SnackbarType = {
 
 function Success(props) {
   const snackbarRef = useRef(null);
-  const { imgUrl, redirect } = props;
-
+  const { map, imgUrl, redirect } = props;
+ 
   const copyLink = () => {
     snackbarRef.current.show();
   };
@@ -22,7 +22,11 @@ function Success(props) {
       <div className="content-box">
         <div className="flex-container-inner">
           <img src={cloud_done} className="success-icon" alt="success icon" />
-          <h2 className="box-header">Upload successful.</h2>
+          <div className="photo-nav">
+            <button className="nav-btn">Prev</button>
+            <h2 className="box-header">Upload successful.</h2>
+            <button className="nav-btn">Next</button>
+          </div>
           <div className="image-div ">
             <img
               id="uploaded-img"

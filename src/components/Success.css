@@ -16,6 +16,29 @@
   padding-left: 10px;
 }
 
+.photo-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.nav-btn {
+  font-family: "Poppins";
+  font-weight: 300;
+  height: 25px;
+  background-color: #2f80ed;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background-color: #2a76da;
+}
+
 .new-upload-box {
   margin-top: 12px;
   line-height: 16px;
