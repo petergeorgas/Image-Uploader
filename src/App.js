@@ -45,7 +45,7 @@ function App() {
 
   const [files, setFiles] = useState([]);
   const [uploadHeader, setUploadHeader] = useState("Uploading ...");
-  const [downloadURL, setDownloadURL] = useState(null); // Store the URL for our uploaded file...
+  const [links, setLinks] = useState([]);
   const snackbarRef = useRef(null);
 
   const [fileMap, setFileMap] = useState({ files: {} });
@@ -85,6 +85,7 @@ function App() {
   const newUpload = () => {
     setSuccess(false); // Reset success state to false, which will cause a redirect to the home page
     setFileMap({ files: {} });
+    setLinks([]);
   };
 
   const handleFileChange = (event) => {
@@ -161,7 +162,7 @@ function App() {
             s.files[name].downloadURL = downloadURL;
             setFileMap(s);
 
-            setDownloadURL(downloadURL);
+            setLinks((links) => [...links, downloadURL]);
           });
 
           // Once the last file completes its upload.
@@ -186,7 +187,7 @@ function App() {
   if (inProg) {
     return <Loading map={fileMap} percentage={pct} header={uploadHeader} />;
   } else if (success) {
-    return <Success imgUrl={downloadURL} redirect={newUpload} />;
+    return <Success links={links} redirect={newUpload} />;
   } else {
     return (
       <div className="flex-container">

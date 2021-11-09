@@ -4,6 +4,14 @@
   color: #219653;
 }
 
+#prev-btn {
+  margin-right: auto;
+}
+
+#next-btn {
+  margin-left: auto;
+}
+
 .link {
   overflow: hidden;
   white-space: nowrap;
@@ -21,12 +29,18 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 355px;
   margin-bottom: 10px;
+}
+
+.success {
+  position: absolute;
 }
 
 .nav-btn {
   font-family: "Poppins";
   font-weight: 300;
+  width: 60px;
   height: 25px;
   background-color: #2f80ed;
   border: none;
