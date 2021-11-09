@@ -1,0 +1,24 @@
+.grid-box {
+  width: 350px;
+  height: 220px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.grid-img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+  border: 2px solid #97bef4;
+}
+
+.grid-element {
+
+  display: flex;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+}

@@ -4,6 +4,14 @@
   color: #219653;
 }
 
+#prev-btn {
+  margin-right: auto;
+}
+
+#next-btn {
+  margin-left: auto;
+}
+
 .link {
   overflow: hidden;
   white-space: nowrap;
@@ -14,6 +22,35 @@
 .link-holder {
   width: 255px;
   padding-left: 10px;
+}
+
+.photo-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 355px;
+  margin-bottom: 10px;
+}
+
+.success {
+  position: absolute;
+}
+
+.nav-btn {
+  font-family: "Poppins";
+  font-weight: 300;
+  width: 60px;
+  height: 25px;
+  background-color: #2f80ed;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background-color: #2a76da;
 }
 
 .new-upload-box {
