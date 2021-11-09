@@ -1,6 +1,6 @@
 import "./App.css";
 import image from "./assets/image.svg";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useReducer } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getStorage,
@@ -14,6 +14,7 @@ import { useDropzone } from "react-dropzone";
 import sha256 from "sha256";
 
 import Snackbar from "./components/Snackbar";
+import ImagePreview from "./components/ImagePreview";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -42,11 +43,12 @@ const storage = getStorage();
 function App() {
   const inputFile = useRef(null);
 
-  const [file, setFile] = useState(null); // Initialize a new state variable to null.
-  const [fileObj, setFileObj] = useState(null);
+  const [files, setFiles] = useState([]);
   const [uploadHeader, setUploadHeader] = useState("Uploading ...");
-  const [downloadURL, setDownloadURL] = useState(null); // Store the URL for our uploaded file...
+  const [links, setLinks] = useState([]);
   const snackbarRef = useRef(null);
+
+  const [fileMap, setFileMap] = useState({ files: {} });
 
   const [pct, setPct] = useState(0);
 
@@ -56,83 +58,125 @@ function App() {
 
   const onChooseButtonClick = () => {
     inputFile.current.click();
-    console.log(inputFile);
   };
 
-  const onDrop = useCallback((dropFile) => {
-    console.log("magma");
-    const singleFile = dropFile[0]; // Grab the first file (if multiple)
-    console.log(singleFile);
+  const onDrop = useCallback((files_list) => {
+    const singleFile = files_list[0]; // Grab the first file (if multiple)
 
     if (!isDragReject) {
-      setFile(URL.createObjectURL(singleFile));
-      setFileObj(singleFile);
+      updateFiles(files_list);
     } else {
       // Show toast!
       snackbarRef.current.show();
     }
   });
 
+  // Updates the list of files -- useful because the behavior of pressing a button & drag and drop is the exact same :)
+  const updateFiles = (files_list) => {
+    if (files_list.length > 4) {
+      files_list = Object.entries(files_list).slice(0, 4);
+    } else {
+      files_list = Object.entries(files_list);
+    }
+
+    setFiles(files_list);
+  };
+
   const newUpload = () => {
     setSuccess(false); // Reset success state to false, which will cause a redirect to the home page
+    setFileMap({ files: {} });
+    setLinks([]);
   };
 
   const handleFileChange = (event) => {
-    console.log("File change!!");
     let target = event.target;
-    console.log(target.files[0]);
-    setFile(URL.createObjectURL(target.files[0]));
-    setFileObj(target.files[0]);
+    let files_list = target.files;
+
+    // The behavior here should be the same, we just need to determine how the UI should display multiple files vs 1...
+    // I'm thinking a grid view of 4. We will only accept 4.
+
+    updateFiles(files_list);
   };
 
   const uploadFile = () => {
-    console.log(file);
-
     // Create a ref to this new file in storage...
-
-    const split_file_name = fileObj.name.split(".");
-    const file_ext = split_file_name[split_file_name.length - 1];
-
-    const hashFileName = sha256(fileObj.name) + "." + file_ext;
-
-    const storageRef = ref(storage, hashFileName);
-
     setInProg(true);
-    const uploadTask = uploadBytesResumable(storageRef, fileObj); // Retrieve the promsise for upload
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // On state change
-        var percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(`${percent}%`);
-        setPct(percent);
-      },
-      (error) => {
-        // On error
-        console.log(
-          "There was an error uploading the image. Please try again..."
-        );
-        // Maybe we can create our own snackbar here.
-      },
-      () => {
-        // On Complete
-        console.log("Image upload complete.");
+    files.forEach((fileObj) => {
+      const name = fileObj[1].name;
+      const split_file_name = name.split(".");
+      const file_ext = split_file_name[split_file_name.length - 1];
 
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("URL: " + downloadURL);
-          setDownloadURL(downloadURL);
-        });
-        setUploadHeader("Done.");
+      const hashFileName = sha256(name) + "." + file_ext;
 
-        setTimeout(() => {
-          setFile(null);
-          setFileObj(null);
-          setInProg(false);
-          setSuccess(true);
-        }, 1500);
-      }
-    );
+      const storageRef = ref(storage, hashFileName);
+
+      const s = {
+        ...fileMap,
+      };
+      console.log(fileObj[1]);
+      fileMap.files[name] = {
+        obj: fileObj[1],
+        pct: 0,
+        downloadURL: "",
+      };
+
+      setFileMap(s);
+
+      ///setFileMap({ ...fileMap, [name]: { pct: 0, downloadURL: null } }); // Add this file to file map.
+
+      const uploadTask = uploadBytesResumable(storageRef, fileObj[1]); // Retrieve the promsise for upload
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // On state change
+          var percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`${fileObj[1].name}: ${percent}%`);
+
+          const s = { ...fileMap };
+
+          s.files[name].pct = percent;
+
+          setFileMap(s);
+          setPct(percent);
+        },
+        (error) => {
+          // On error
+          console.log(
+            "There was an error uploading the image. Please try again..."
+          );
+          // Maybe we can create our own snackbar here.
+        },
+        () => {
+          // On Complete
+          console.log("Image upload complete.");
+
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("URL: " + downloadURL);
+
+            const s = {
+              ...fileMap,
+            };
+
+            s.files[name].downloadURL = downloadURL;
+            setFileMap(s);
+
+            setLinks((links) => [...links, downloadURL]);
+          });
+
+          // Once the last file completes its upload.
+          if (fileObj === files[files.length - 1]) {
+            setUploadHeader("Done.");
+            setTimeout(() => {
+              setInProg(false);
+              setSuccess(true);
+              setFiles([]);
+            }, 1500);
+          }
+        }
+      );
+    });
   };
 
   const { getRootProps, getInputProps, isDragReject } = useDropzone({
@@ -141,16 +185,16 @@ function App() {
   });
 
   if (inProg) {
-    return <Loading percentage={pct} header={uploadHeader} />;
+    return <Loading map={fileMap} percentage={pct} header={uploadHeader} />;
   } else if (success) {
-    return <Success imgUrl={downloadURL} redirect={newUpload} />;
+    return <Success links={links} redirect={newUpload} />;
   } else {
     return (
       <div className="flex-container">
         <div className="content-box">
           <div className="flex-container-inner">
             <h2 className="box-header">Upload your image</h2>
-            {!file ? (
+            {!files.length > 0 ? (
               <div {...getRootProps()}>
                 <div className="dashed-box flex-container-inner">
                   <input {...getInputProps()} />
@@ -168,12 +212,12 @@ function App() {
               <div className="image-div">
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <img id="uploaded-img" src={file} alt="Uploaded image" />
+                  <ImagePreview images={files} />
                 </div>
               </div>
             )}
 
-            {!file ? (
+            {!files.length > 0 ? (
               <div style={{ textAlign: "center" }}>
                 <p className="drag-drop-txt">Or</p>
                 <input
@@ -184,6 +228,7 @@ function App() {
                   style={{ display: "none" }}
                   onChange={handleFileChange}
                   accept="image/jpeg, image/png"
+                  multiple={true}
                 />
                 <button className="btn" onClick={onChooseButtonClick}>
                   Pick a file
@@ -207,6 +252,7 @@ function App() {
                   style={{ display: "none" }}
                   onChange={handleFileChange}
                   accept="image/*"
+                  multiple
                 />
                 <button className="btn" onClick={onChooseButtonClick}>
                   Pick another
