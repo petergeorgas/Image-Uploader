@@ -4,14 +4,6 @@
   color: #219653;
 }
 
-#prev-btn {
-  margin-right: auto;
-}
-
-#next-btn {
-  margin-left: auto;
-}
-
 .link {
   overflow: hidden;
   white-space: nowrap;
@@ -25,16 +17,13 @@
 }
 
 .photo-nav {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+  display: grid;
+  grid-auto-flow: column;
   align-items: center;
+  justify-items: center;
+  grid-template-columns: min-content auto;
   width: 355px;
   margin-bottom: 10px;
-}
-
-.success {
-  position: absolute;
 }
 
 .nav-btn {
