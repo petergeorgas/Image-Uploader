@@ -17,13 +17,19 @@
 }
 
 .photo-nav {
-  display: grid;
-  grid-auto-flow: column;
+  display: flex;
   align-items: center;
-  justify-items: center;
-  grid-template-columns: min-content auto;
+  justify-content: center;
   width: 355px;
   margin-bottom: 10px;
+}
+
+#prev-btn {
+  margin: auto;
+}
+
+#next-btn {
+  margin: auto;
 }
 
 .nav-btn {
