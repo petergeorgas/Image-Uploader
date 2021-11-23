@@ -205,7 +205,7 @@ function App() {
                     height={100}
                     alt="Filler Image"
                   />
-                  <p className="drag-drop-txt">Drag & drop your image here</p>
+                  <p className="drag-drop-txt">Drag & drop your images here</p>
                 </div>
               </div>
             ) : (

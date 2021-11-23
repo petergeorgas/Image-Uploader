@@ -38,24 +38,30 @@ function Success(props) {
           <img src={cloud_done} className="success-icon" alt="success icon" />
           <div className="photo-nav">
             <button
-              style={idx > 0 ? {} : { display: "none" }}
+              style={
+                idx > 0 ? {} : { backgroundColor: "#3f3f3f", cursor: "default" }
+              }
               id="prev-btn"
               className="nav-btn"
-              onClick={handlePrev}
+              onClick={idx > 0 ? handlePrev : () => {}}
             >
               Prev
             </button>
             {links.length > 1 ? (
-              <h2 className="box-header success">Uploads successful.</h2>
+              <h2 className="box-header">Uploads successful.</h2>
             ) : (
               <h2 className="box-header">Upload successful.</h2>
             )}
 
             <button
-              style={idx < links.length - 1 ? {} : { display: "none" }}
+              style={
+                idx < links.length - 1
+                  ? {}
+                  : { backgroundColor: "#3f3f3f", cursor: "default" }
+              }
               id="next-btn"
               className="nav-btn"
-              onClick={handleNext}
+              onClick={idx < links.length - 1 ? handleNext : () => {}}
             >
               Next
             </button>
