@@ -37,34 +37,36 @@ function Success(props) {
         <div className="flex-container-inner">
           <img src={cloud_done} className="success-icon" alt="success icon" />
           <div className="photo-nav">
-            <button
-              style={
-                idx > 0 ? {} : { backgroundColor: "#3f3f3f", cursor: "default" }
-              }
-              id="prev-btn"
-              className="nav-btn"
-              onClick={idx > 0 ? handlePrev : () => {}}
-            >
-              Prev
-            </button>
             {links.length > 1 ? (
-              <h2 className="box-header">Uploads successful.</h2>
-            ) : (
-              <h2 className="box-header">Upload successful.</h2>
-            )}
+              <button
+                style={
+                  idx > 0
+                    ? {}
+                    : { backgroundColor: "#3f3f3f", cursor: "default" }
+                }
+                id="prev-btn"
+                className="nav-btn"
+                onClick={idx > 0 ? handlePrev : () => {}}
+              >
+                Prev
+              </button>
+            ) : null}
 
-            <button
-              style={
-                idx < links.length - 1
-                  ? {}
-                  : { backgroundColor: "#3f3f3f", cursor: "default" }
-              }
-              id="next-btn"
-              className="nav-btn"
-              onClick={idx < links.length - 1 ? handleNext : () => {}}
-            >
-              Next
-            </button>
+            <h2 className="box-header">Upload successful.</h2>
+            {links.length > 1 ? (
+              <button
+                style={
+                  idx < links.length - 1
+                    ? {}
+                    : { backgroundColor: "#3f3f3f", cursor: "default" }
+                }
+                id="next-btn"
+                className="nav-btn"
+                onClick={idx < links.length - 1 ? handleNext : () => {}}
+              >
+                Next
+              </button>
+            ) : null}
           </div>
           <div className="image-div ">
             <img
